@@ -1,0 +1,33 @@
+const router = require('express').Router();
+const { examiner, user } = require('../controllers');
+const { ACCOUNT_TYPE } = require('../constant/APP_CONSTANTS');
+const { validate, authorize } = require('../middelwares');
+const { createCourseSchema, getStudentsSchema, createStudentSchema, addSubjectSchema, getSubjectsSchema, createExamSchema, addStudentSchema, deleteSchema, removeStudentSchema, updateCourseSchema, updateSubjectSchema, updateQuestionSchema, updateExamSchema, querySchema, resultSchema } = require('../validations/examiner');
+const { profileUpdateSchema } = require('../validations/user');
+
+router.use(authorize(ACCOUNT_TYPE.EXAMINER));
+router.get('/exams', examiner.getExams);
+router.get('/dashboard', examiner.getDashboard);
+router.get('/allStudents', examiner.allStudents);
+router.get('/result', validate(querySchema), examiner.getResult);
+router.get('/courseStudents', validate(getStudentsSchema), examiner.getStudents);
+router.get('/courseSubjects', validate(getSubjectsSchema), examiner.getSubjects);
+router.post('/createCourse', validate(createCourseSchema), examiner.createCourse);
+router.post('/result', validate(resultSchema), examiner.declareResult);
+router.post('/addSubjects', validate(addSubjectSchema), examiner.addSubjects);
+router.post('/createStudent', validate(createStudentSchema), examiner.createStudent);
+router.post('/addStudent', validate(addStudentSchema), examiner.addStudent);
+router.post('/createExam', validate(createExamSchema), examiner.createExam);
+router.post('/removeStudent', validate(removeStudentSchema), examiner.removeExamStudent);
+router.delete('/subject/:subjectID', validate(deleteSchema), examiner.deleteSubject);
+router.delete('/course/:courseID', validate(deleteSchema), examiner.deleteCourse);
+router.delete('/exam/:examID', validate(deleteSchema), examiner.deleteExam);
+router.delete('/student/:studentID', validate(deleteSchema), examiner.deleteStudent);
+router.delete('/question/:questionID', validate(deleteSchema), examiner.deleteQuestion);
+router.patch('/profile', validate(profileUpdateSchema), user.updateProfile);
+router.patch('/course', validate(updateCourseSchema), examiner.updateCourse);
+router.patch('/subject', validate(updateSubjectSchema), examiner.updateSubject);
+router.patch('/exam', validate(updateExamSchema), examiner.updateExam);
+router.patch('/question', validate(updateQuestionSchema), examiner.updateQuestion);
+
+module.exports = router;

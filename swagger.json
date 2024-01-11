@@ -1,0 +1,1259 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Exam Portal REST APIs",
+    "description": "Given Below Are Docs For Exam-Portal REST APIs",
+    "contact": {
+      "name": "Sanamdeep Kajla",
+      "email": "kajlasanamdeep@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://exam-portal-by-hritik-sanam.herokuapp.com",
+      "description": "Live Server"
+    },
+    {
+      "url": "http://localhost:8000",
+      "description": "Local Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "accessToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "pageIndex": {
+        "name": "pageIndex",
+        "in": "query",
+        "type": "number"
+      },
+      "pageSize": {
+        "name": "pageSize",
+        "in": "query",
+        "type": "number"
+      },
+      "courseID": {
+        "name": "courseID",
+        "in": "query",
+        "type": "string",
+        "required": true
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    {
+      "examinerToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User APIs"
+    },
+    {
+      "name": "Admin",
+      "description": "Admin APIs"
+    },
+    {
+      "name": "Examiner",
+      "description": "Examiner APIs"
+    },
+    {
+      "name": "Student",
+      "description": "Student APIs"
+    }
+  ],
+  "paths": {
+    "/user/login": {
+      "post": {
+        "security": [],
+        "content": "application/json",
+        "summary": "User Login Api",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "description": "Enter User details to login",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/user/register": {
+      "post": {
+        "security": [],
+        "content": "application/json",
+        "summary": "User Signup Api",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "mobileNumber": {
+                    "type": "number"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                },
+                "required": [
+                  "firstName",
+                  "mobileNumber",
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/admin/dashboard": {
+      "get": {
+        "summary": "Admin Dashboard Api",
+        "content": "application/json",
+        "tags": [
+          "Admin"
+        ],
+        "responses": {}
+      }
+    },
+    "/admin/examiners": {
+      "get": {
+        "summary": "Get list of Approved or Declined Examiners Api",
+        "content": "application/json",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "The Status of examiners to filter",
+            "example": "approved",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "example": "email",
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "example": 1,
+            "type": "number"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "example": "email",
+            "type": "string"
+          },
+          {
+            "$ref": "#/components/parameters/pageIndex"
+          },
+          {
+            "$ref": "#/components/parameters/pageSize"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/admin/examiner": {
+      "put": {
+        "summary": "Approve or Decline Examiner Api",
+        "content": "application/json",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "description": "Enter Approve or Decline",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "examinerID": {
+                    "type": "string"
+                  },
+                  "action": {
+                    "type": "string",
+                    "example": "APPROVED"
+                  }
+                },
+                "required": [
+                  "examinerID",
+                  "action"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/admin/profile": {
+      "patch": {
+        "summary": "Admin Profile Update Api",
+        "content": "application/json",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "description": "Update Profile",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "mobileNumber": {
+                    "type": "number"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/admin/examiner/{examinerID}": {
+      "delete": {
+        "summary": "Delete Examiner Api",
+        "content": "application/json",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "examinerID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/examiner/dashboard": {
+      "get": {
+        "summary": "Examiner Dashboard Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "responses": {}
+      }
+    },
+    "/examiner/createCourse": {
+      "post": {
+        "summary": "Create Course Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Create Course",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "description"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/addSubjects": {
+      "post": {
+        "summary": "Create Subjects Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Create Course Subjects",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "subjects": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "name of subject",
+                          "required": true
+                        },
+                        "courseID": {
+                          "type": "string",
+                          "description": "courseID for subject",
+                          "required": true
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "name": "DS",
+                        "courseID": ""
+                      },
+                      {
+                        "name": "OOPs",
+                        "courseID": ""
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "subjects"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/createStudent": {
+      "post": {
+        "summary": "Examiner Create Student Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Create Course Student",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "mobileNumber": {
+                    "type": "number"
+                  },
+                  "dob": {
+                    "type": "date"
+                  },
+                  "courseID": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  },
+                  "fatherName": {
+                    "type": "string"
+                  },
+                  "motherName": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "enum": [
+                      "MALE",
+                      "FEMALE",
+                      "OTHER"
+                    ]
+                  }
+                },
+                "required": [
+                  "firstName",
+                  "email",
+                  "mobileNumber",
+                  "dob",
+                  "courseID",
+                  "password",
+                  "fatherName",
+                  "motherName",
+                  "address",
+                  "gender",
+                  "state",
+                  "city"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/courseStudents": {
+      "get": {
+        "summary": "Examiner View Students Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pageIndex"
+          },
+          {
+            "$ref": "#/components/parameters/pageSize"
+          },
+          {
+            "$ref": "#/components/parameters/courseID"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/examiner/courseSubjects": {
+      "get": {
+        "summary": "Examiner View Subjects Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pageIndex"
+          },
+          {
+            "$ref": "#/components/parameters/pageSize"
+          },
+          {
+            "$ref": "#/components/parameters/courseID"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/examiner/createExam": {
+      "post": {
+        "summary": "Examiner Create Exam Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Create Subject Exam",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "subjectID": {
+                    "type": "string"
+                  },
+                  "startTime": {
+                    "type": "string"
+                  },
+                  "endTime": {
+                    "type": "string"
+                  },
+                  "examDate": {
+                    "type": "string"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "accessCode": {
+                    "type": "string"
+                  },
+                  "students": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "required": true
+                    },
+                    "example": [
+                      "student 1 _id",
+                      "student 2 _id"
+                    ]
+                  },
+                  "questions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "question": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "marks": {
+                          "type": "number",
+                          "required": true
+                        },
+                        "correctOption": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "options": {
+                          "type": "array",
+                          "required": true,
+                          "items": {
+                            "type": "string",
+                            "required": true
+                          }
+                        }
+                      }
+                    },
+                    "example": [
+                      {
+                        "question": "question 1 text?",
+                        "correctOption": "option1",
+                        "options": [
+                          "option1",
+                          "option2",
+                          "option3",
+                          "option4"
+                        ],
+                        "marks": 5
+                      },
+                      {
+                        "question": "question 2 text?",
+                        "correctOption": "option2",
+                        "options": [
+                          "option1",
+                          "option2",
+                          "option3",
+                          "option4"
+                        ],
+                        "marks": 5
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "questions",
+                  "students",
+                  "accessCode",
+                  "duration",
+                  "examDate",
+                  "endTime",
+                  "startTime",
+                  "subjectID"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/exams": {
+      "get": {
+        "summary": "Examiner Exams Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pageIndex"
+          },
+          {
+            "$ref": "#/components/parameters/pageSize"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/examiner/allStudents": {
+      "get": {
+        "summary": "Examiner Get All Students Api For Adding Student",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pageIndex"
+          },
+          {
+            "$ref": "#/components/parameters/pageSize"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/examiner/result": {
+      "get": {
+        "summary": "Examiner Get Result Api For Viewing Students Result",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pageIndex"
+          },
+          {
+            "$ref": "#/components/parameters/pageSize"
+          },
+          {
+            "name": "examID",
+            "in": "query",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {}
+      },
+      "post": {
+        "summary": "Declare Result Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Declare Exam Result",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "examID": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "examID"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/addStudent": {
+      "post": {
+        "summary": "Add Student Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Add Student To Course",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "studentID": {
+                    "type": "string"
+                  },
+                  "courseID": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "studentID",
+                  "courseID"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/removeStudent": {
+      "post": {
+        "summary": "Remove Student From Exam Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Remove Student For Exam",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "studentID": {
+                    "type": "string"
+                  },
+                  "examID": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "studentID",
+                  "examID"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/profile": {
+      "patch": {
+        "summary": "Examiner Update Profile Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Update Profile",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "mobileNumber": {
+                    "type": "number"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/course": {
+      "patch": {
+        "summary": "Update Course Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Update Course",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "courseID": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "courseID"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/subject": {
+      "patch": {
+        "summary": "Update Subject Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Update Subject",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "subjectID": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "subjectID",
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/exam": {
+      "patch": {
+        "summary": "Examiner Update Exam Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Update Exam",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "examID": {
+                    "type": "string"
+                  },
+                  "startTime": {
+                    "type": "time"
+                  },
+                  "endTime": {
+                    "type": "time"
+                  },
+                  "examDate": {
+                    "type": "date"
+                  },
+                  "duration": {
+                    "type": "time"
+                  }
+                },
+                "required": [
+                  "examID"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/question": {
+      "patch": {
+        "summary": "Examiner Update Question Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "requestBody": {
+          "description": "Update Question",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "questionID": {
+                    "type": "string"
+                  },
+                  "question": {
+                    "type": "string"
+                  },
+                  "marks": {
+                    "type": "number"
+                  },
+                  "correctOption": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "required": true
+                    },
+                    "example": [
+                      "option1",
+                      "option2",
+                      "option3",
+                      "option4"
+                    ]
+                  }
+                },
+                "required": [
+                  "questionID"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/examiner/course/{courseID}": {
+      "delete": {
+        "summary": "Delete Course Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "parameters": [
+          {
+            "name": "courseID",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/examiner/subject/{subjectID}": {
+      "delete": {
+        "summary": "Delete Subject Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "parameters": [
+          {
+            "name": "subjectID",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/examiner/exam/{examID}": {
+      "delete": {
+        "summary": "Delete exam Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "parameters": [
+          {
+            "name": "examID",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/examiner/student/{studentID}": {
+      "delete": {
+        "summary": "Delete student Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "parameters": [
+          {
+            "name": "studentID",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/examiner/question/{questionID}": {
+      "delete": {
+        "summary": "Delete question Api",
+        "content": "application/json",
+        "tags": [
+          "Examiner"
+        ],
+        "parameters": [
+          {
+            "name": "questionID",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/student/dashboard": {
+      "get": {
+        "summary": "Student Dashboard Api",
+        "content": "application/json",
+        "tags": [
+          "Student"
+        ],
+        "responses": {}
+      }
+    },
+    "/student/exams": {
+      "get": {
+        "summary": "Student upcoming Exams Api",
+        "content": "application/json",
+        "tags": [
+          "Student"
+        ],
+        "parameters": [
+          {
+            "$ref":"#/components/parameters/pageIndex"
+          },
+          {
+            "$ref":"#/components/parameters/pageSize"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/student/accessExam": {
+      "post": {
+        "summary": "Student Access Exam Api",
+        "content": "application/json",
+        "tags": [
+          "Student"
+        ],
+        "requestBody":{
+          "description":"Access Code For Exam",
+          "content":{
+            "application/x-www-form-urlencoded":{
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "studentID": {
+                    "type": "string"
+                  },
+                  "accessCode": {
+                    "type": "string"
+                  },
+                  "examID": {
+                    "type": "string"
+                  }
+                },
+                "required":["accessCode","examID","studentID"]
+              }  
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/student/questions": {
+      "get": {
+        "summary": "Student Exams Questions Api",
+        "content": "application/json",
+        "tags": [
+          "Student"
+        ],
+        "parameters": [
+          {
+            "$ref":"#/components/parameters/pageIndex"
+          },
+          {
+            "$ref":"#/components/parameters/pageSize"
+          },
+          {
+            "name": "studentID",
+            "in": "query",
+            "type": "string",
+            "required":true
+          },
+          {
+            "name": "examID",
+            "in": "query",
+            "type": "string",
+            "required":true
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/student/answer": {
+      "post": {
+        "summary": "Submit Answer Api",
+        "content": "application/json",
+        "tags": [
+          "Student"
+        ],
+        "requestBody":{
+          "description":"Submit Answer",
+          "content":{
+            "application/x-www-form-urlencoded":{
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "studentID": {
+                    "type": "string"
+                  },
+                  "answer": {
+                    "type": "string"
+                  },
+                  "questionID": {
+                    "type": "string"
+                  }
+                },
+                "required":[
+                  "questionID","answer","studentID"
+                ]
+              }  
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/student/exam": {
+      "post": {
+        "summary": "Submit Exam Api",
+        "content": "application/json",
+        "tags": [
+          "Student"
+        ],
+        "requestBody":{
+          "description":"Submit Exam",
+          "content":{
+            "application/x-www-form-urlencoded":{
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "studentID": {
+                    "type": "string"
+                  },
+                  "examID": {
+                    "type": "string"
+                  }
+                },
+                "required":[
+                  "examID","studentID"
+                ]
+              }  
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/student/examRecords": {
+      "get": {
+        "summary": "Student Exams Record Api",
+        "content": "application/json",
+        "tags": [
+          "Student"
+        ],
+        "parameters": [
+          {
+            "$ref":"#/components/parameters/pageIndex"
+          },
+          {
+            "$ref":"#/components/parameters/pageSize"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/student/results": {
+      "get": {
+        "summary": "Student Exams Results Api",
+        "content": "application/json",
+        "tags": [
+          "Student"
+        ],
+        "parameters": [
+          {
+            "$ref":"#/components/parameters/pageIndex"
+          },
+          {
+            "$ref":"#/components/parameters/pageSize"
+          }
+        ],
+        "responses": {}
+      }
+    }
+  }
+}
